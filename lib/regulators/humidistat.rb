@@ -4,8 +4,8 @@ end
 
 class Humidistat < BaseRegulator
   def set_relays
-    @humidifier = Dino::Components::Button.new(pin: @pins[:humidifier_pin], board: @board)
-    @dehumidifier = Dino::Components::Button.new(pin: @pins[:dehumidifier_pin], board: @board)
+    @humidifier = Dino::Components::Led.new(pin: @pins[:humidifier_pin], board: @board)
+    @dehumidifier = Dino::Components::Led.new(pin: @pins[:dehumidifier_pin], board: @board)
   end
 
   def set_sensors

@@ -4,7 +4,7 @@ end
 
 class Thermostat < BaseRegulator
   def set_relays
-    @freezer = Dino::Components::Button.new(pin: @pins[:freezer_pin], board: @board)
+    @freezer = Dino::Components::Led.new(pin: @pins[:freezer_pin], board: @board)
   end
 
   def set_sensors
