@@ -1,4 +1,4 @@
-%w(rubygems bundler/setup dino lib/regulators).each do |lib|
+%w(rubygems bundler/setup dino rest_client lib/regulators).each do |lib|
   require lib
 end
 
