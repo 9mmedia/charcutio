@@ -1,4 +1,4 @@
-%w(rubygems bundler/setup dino rest_client lib/regulators).each do |lib|
+%w(rubygems bundler/setup dino rest_client lib/fridge_api_client lib/regulators).each do |lib|
   require lib
 end
 
@@ -7,6 +7,10 @@ class Fridge
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
     @weight_sensor = Dino::Components::Sensor.new(pin: @pins[:weight_pin], board: @board)
+  end
+
+  def client
+    @api_client ||= FridgeApiClient.new(self)
   end
 
   def humidistat
