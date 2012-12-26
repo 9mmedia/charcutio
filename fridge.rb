@@ -5,7 +5,7 @@ require File.expand_path('../lib/fridge_api_client', __FILE__)
 require File.expand_path('../lib/regulators', __FILE__)
 
 class Fridge
-  LOGGER = Logger.new('logfile.log')
+  LOGGER = Logger.new('tmp/logfile.log')
   attr_accessor :board, :pins
 
   def initialize(pins)
@@ -30,7 +30,7 @@ class Fridge
     Thread.new do
       loop do
         get_set_points
-        puts "current data: #{File.readlines('temperature').first.to_f}"
+        puts "current data: #{File.readlines('tmp/temperature').first.to_f}"
         sleep 30
       end
     end

@@ -39,7 +39,7 @@ class BaseRegulator
     def sensor_callback(sensor_name)
       Proc.new do |data|
         puts "#{sensor_name}: #{data}"
-        File.open(sensor_name, 'w') { |f| f.puts data }
+        File.open("tmp/#{sensor_name}", 'w') { |f| f.puts data }
         # @fridge.client.post_sensor_data(sensor_name, sensor_data)
       end
     end
