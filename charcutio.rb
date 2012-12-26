@@ -30,7 +30,7 @@ class Fridge
     Thread.new do
       loop do
         get_set_points
-        puts "current data: #{File.readlines('tmp/temperature').first.to_f}"
+        puts "current data: #{thermostat.latest_sensor_data}"
         sleep 30
       end
     end
@@ -56,5 +56,5 @@ end
 
 
 if __FILE__ == $0
-  Fridge.new(humidifier_pin: '', dehumidifier_pin: '', humidity_pin: '', freezer_pin: '', temperature_pin: '2', weight_pin: '').run
+  Fridge.new(humidifier_pin: '', dehumidifier_pin: '', humidity_pin: '', freezer_pin: '5', temperature_pin: '2', weight_pin: '').run
 end

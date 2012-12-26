@@ -22,18 +22,6 @@ class BaseRegulator
     sensor.when_data_received sensor_callback(sensor_name)
   end
 
-  def set_relays
-    # override
-  end
-
-  def set_sensors
-    # override
-  end
-
-  def update_relay_states
-    # override
-  end
-
   private
 
     def sensor_callback(sensor_name)
