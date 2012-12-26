@@ -1,4 +1,6 @@
 class BaseRegulator
+  attr_accessor :goal_state
+
   def initialize(board, pins)
     @board = board
     @pins = pins
