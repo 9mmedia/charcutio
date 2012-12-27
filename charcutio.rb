@@ -26,6 +26,10 @@ class Charcutio
     @thermostat ||= Thermostat.new(self)
   end
 
+  def post_sensor_data(sensor_name, sensor_data)
+    # client.post_sensor_data(sensor_name, sensor_data)
+  end
+
   def regularly_update_set_points
     Thread.new do
       loop do
@@ -38,7 +42,7 @@ class Charcutio
 
   def run
     regularly_update_set_points
-    # humidistat.maintain_goal_state
+    humidistat.maintain_goal_state
     thermostat.maintain_goal_state
     sleep
   end
@@ -46,7 +50,8 @@ class Charcutio
   private
 
     def get_set_points(data=nil)
-      thermostat.goal_state = 26
+      humidistat.goal_state = 50
+      thermostat.goal_state = 15
       # humidistat.goal_state, thermostat.goal_state = client.get_set_points(data)
     rescue => e
       LOGGER.error "#{Time.current} = #{e}"
@@ -55,5 +60,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(humidifier_pin: '', dehumidifier_pin: '', humidity_pin: '7', freezer_pin: '5', temperature_pin: '2', weight_pin: '').run
+  Charcutio.new(humidifier_pin: '5', dehumidifier_pin: nil, humidity_pin: '7', freezer_pin: nil, temperature_pin: '2', weight_pin: nil).run
 end

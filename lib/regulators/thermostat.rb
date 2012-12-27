@@ -1,12 +1,20 @@
 class Thermostat < BaseRegulator
   attr_reader :freezer, :temperature_sensor
 
+  def goal_state=(value)
+    File.open('tmp/temperature_goal', 'w') { |f| f.puts value }
+  end
+
+  def goal_state
+    File.readlines('tmp/temperature_goal').first.to_f
+  end
+
   def latest_sensor_data
     File.readlines('tmp/temperature').first.to_f
   end
 
   def set_relays
-    @freezer = Dino::Components::Led.new(pin: @pins[:freezer_pin], board: @board)
+    @freezer = Dino::Components::Led.new(pin: @pins[:freezer_pin], board: @board) if @pins[:freezer_pin]
   end
 
   def set_sensors
@@ -15,15 +23,13 @@ class Thermostat < BaseRegulator
   end
 
   def update_relay_states
-    puts "latest_sensor_data: #{latest_sensor_data}"
-    # if latest_sensor_data >= goal_state + 10
-    if latest_sensor_data >= 25
-      puts "should go on"
-      @freezer.on unless @freezer_on
+    if latest_sensor_data >= goal_state + 10
+      puts "freezer should go on"
+      @freezer.on unless @freezer_on || !@freezer
       @freezer_on = true
     else
-      puts "should go off"
-      @freezer.off if @freezer_on
+      puts "freezer should go off"
+      @freezer.off if @freezer_on && @freezer
       @freezer_on = false
     end
   end

@@ -1,7 +1,4 @@
 class BaseRegulator
-  attr_accessor :goal_state
-  attr_reader :sensor_data
-
   def initialize(charcutio)
     @charcutio = charcutio
     @board = charcutio.board
@@ -15,7 +12,7 @@ class BaseRegulator
     Thread.new do
       loop do
         update_relay_states
-        sleep 30
+        sleep 10 # should be 30
       end
     end
   end
@@ -30,7 +27,7 @@ class BaseRegulator
       Proc.new do |data|
         puts "#{sensor_name}: #{data}"
         File.open("tmp/#{sensor_name}", 'w') { |f| f.puts data }
-        # @charcutio.client.post_sensor_data(sensor_name, sensor_data)
+        # @charcutio.post_sensor_data(sensor_name, sensor_data)
       end
     end
 
