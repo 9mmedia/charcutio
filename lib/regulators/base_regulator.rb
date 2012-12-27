@@ -2,10 +2,10 @@ class BaseRegulator
   attr_accessor :goal_state
   attr_reader :sensor_data
 
-  def initialize(fridge)
-    @fridge = fridge
-    @board = fridge.board
-    @pins = fridge.pins
+  def initialize(charcutio)
+    @charcutio = charcutio
+    @board = charcutio.board
+    @pins = charcutio.pins
     set_relays
     set_sensors
   end
@@ -13,22 +13,24 @@ class BaseRegulator
   def maintain_goal_state
     setup_sensor_callbacks
     Thread.new do
-      update_relay_states
-      sleep 30
+      loop do
+        update_relay_states
+        sleep 30
+      end
     end
   end
 
-  def on_sensor_data(sensor_name, sensor)
-    sensor.when_data_received sensor_callback(sensor_name)
-  end
-
   private
+
+    def on_sensor_data(sensor_name, sensor)
+      sensor.when_data_received sensor_callback(sensor_name)
+    end
 
     def sensor_callback(sensor_name)
       Proc.new do |data|
         puts "#{sensor_name}: #{data}"
         File.open("tmp/#{sensor_name}", 'w') { |f| f.puts data }
-        # @fridge.client.post_sensor_data(sensor_name, sensor_data)
+        # @charcutio.client.post_sensor_data(sensor_name, sensor_data)
       end
     end
 
@@ -36,5 +38,6 @@ class BaseRegulator
       @sensors.each do |sensor_name, sensor|
         on_sensor_data(sensor_name, sensor)
       end
+      sleep 5
     end
 end

@@ -1,5 +1,5 @@
 class Humidistat < BaseRegulator
-  attr_reader :humidity_sensor
+  attr_reader :dehumidifier, :humidifier, :humidity_sensor
 
   def latest_sensor_data
     File.readlines('tmp/humidity').first.to_f

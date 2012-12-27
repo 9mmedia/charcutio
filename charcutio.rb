@@ -4,7 +4,7 @@ end
 require File.expand_path('../lib/fridge_api_client', __FILE__)
 require File.expand_path('../lib/regulators', __FILE__)
 
-class Fridge
+class Charcutio
   LOGGER = Logger.new('tmp/logfile.log')
   attr_accessor :board, :pins
 
@@ -30,7 +30,7 @@ class Fridge
     Thread.new do
       loop do
         get_set_points
-        puts "current data: #{thermostat.latest_sensor_data}"
+        puts "updating set points"
         sleep 30
       end
     end
@@ -39,15 +39,14 @@ class Fridge
   def run
     regularly_update_set_points
     # humidistat.maintain_goal_state
-    # thermostat.maintain_goal_state
-    thermostat.on_sensor_data "temperature", thermostat.temperature_sensor
+    thermostat.maintain_goal_state
     sleep
   end
 
   private
 
     def get_set_points(data=nil)
-      thermostat.goal_state = 28
+      thermostat.goal_state = 26
       # humidistat.goal_state, thermostat.goal_state = client.get_set_points(data)
     rescue => e
       LOGGER.error "#{Time.current} = #{e}"
@@ -56,5 +55,5 @@ end
 
 
 if __FILE__ == $0
-  Fridge.new(humidifier_pin: '', dehumidifier_pin: '', humidity_pin: '', freezer_pin: '5', temperature_pin: '2', weight_pin: '').run
+  Charcutio.new(humidifier_pin: '', dehumidifier_pin: '', humidity_pin: '7', freezer_pin: '5', temperature_pin: '2', weight_pin: '').run
 end

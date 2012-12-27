@@ -1,5 +1,5 @@
 class Thermostat < BaseRegulator
-  attr_reader :temperature_sensor
+  attr_reader :freezer, :temperature_sensor
 
   def latest_sensor_data
     File.readlines('tmp/temperature').first.to_f
@@ -15,10 +15,16 @@ class Thermostat < BaseRegulator
   end
 
   def update_relay_states
-    if latest_sensor_data >= goal_state + 10
-      @freezer.on
+    puts "latest_sensor_data: #{latest_sensor_data}"
+    # if latest_sensor_data >= goal_state + 10
+    if latest_sensor_data >= 25
+      puts "should go on"
+      @freezer.on unless @freezer_on
+      @freezer_on = true
     else
-      @freezer.off
+      puts "should go off"
+      @freezer.off if @freezer_on
+      @freezer_on = false
     end
   end
 end
