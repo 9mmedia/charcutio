@@ -10,9 +10,9 @@ class Charcutio
   attr_accessor :board, :id, :pins
 
   def initialize(pins)
+    @id = get_id
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
-    @id = get_id
     # @weight_sensor = Dino::Components::Sensor.new(pin: @pins[:weight_pin], board: @board)
   end
 
@@ -54,11 +54,8 @@ class Charcutio
     def get_id
       return @id if @id
       temp_id = File.readlines('tmp/id').first if File.exist?('tmp/id')
-      if temp_id.length > 0
-        temp_id.to_i
-      else
-        client.get_id
-      end
+      return temp_id.to_i if temp_id.length > 0
+      client.get_id
     end
 
     def get_set_points(data=nil)
