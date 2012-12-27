@@ -3,9 +3,15 @@
 end
 
 class FridgeApiClient
+  API_KEY = ''
+
   def initialize(fridge)
     @fridge = fridge
-    @base_url = ''
+    @base_url = 'http://charcut.io'
+  end
+
+  def get_id
+    RestClient.post "#{@base_url}/boxes", params: {api_key: FridgeApiClient::API_KEY, name: 'Charcutio'}
   end
 
   def get_set_points

@@ -6,11 +6,13 @@ require File.expand_path('../lib/regulators', __FILE__)
 
 class Charcutio
   LOGGER = Logger.new('tmp/logfile.log')
-  attr_accessor :board, :pins
+
+  attr_accessor :board, :id, :pins
 
   def initialize(pins)
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
+    @id = get_id
     # @weight_sensor = Dino::Components::Sensor.new(pin: @pins[:weight_pin], board: @board)
   end
 
@@ -48,6 +50,16 @@ class Charcutio
   end
 
   private
+
+    def get_id
+      return @id if @id
+      temp_id = File.readlines('tmp/id').first if File.exist?('tmp/id')
+      if temp_id.length > 0
+        temp_id.to_i
+      else
+        client.get_id
+      end
+    end
 
     def get_set_points(data=nil)
       humidistat.goal_state = 50
