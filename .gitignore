@@ -1,1 +1,4 @@
 tmp/
+logfile.log
+.DS_Store
+test.rb
