@@ -20,6 +20,6 @@ class FridgeApiClient
   end
 
   def post_sensor_data(sensor_name, sensor_data)
-    RestClient.post @base_url #somethingsomething
+    RestClient.post "#{@base_url}/boxes/#{@fridge.id}", params: {api_key: FridgeApiClient::API_KEY, type: sensor_name, value: sensor_data}
   end
 end
