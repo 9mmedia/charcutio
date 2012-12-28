@@ -3,6 +3,9 @@
 end
 require File.expand_path('../lib/fridge_api_client', __FILE__)
 require File.expand_path('../lib/regulators', __FILE__)
+require File.expand_path('../lib/webcam', __FILE__)
+require File.expand_path('../lib/light', __FILE__)
+require File.expand_path('../lib/meat_photographer', __FILE__)
 
 class Charcutio
   LOGGER = Logger.new('tmp/logfile.log')
@@ -28,6 +31,14 @@ class Charcutio
     @thermostat ||= Thermostat.new(self)
   end
 
+  def light
+    @light ||= Light.new(self)
+  end
+
+  def webcam
+    @webcam ||= Webcam.new(light)
+  end
+
   def post_sensor_data(sensor_name, sensor_data)
     # client.post_sensor_data(sensor_name, sensor_data)
   end
@@ -47,6 +58,7 @@ class Charcutio
       regularly_update_set_points
       humidistat.maintain_goal_state
       thermostat.maintain_goal_state
+      MeatPhotographer.new(webcam, client).run
       sleep
     else
       puts "Can't run a fridge without an ID!"
@@ -75,5 +87,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(humidifier_pin: '5', dehumidifier_pin: nil, humidity_pin: '7', freezer_pin: nil, temperature_pin: '2', weight_pin: nil).run
+  Charcutio.new(light_pins: '9, 10, 11', humidifier_pin: '5', dehumidifier_pin: nil, humidity_pin: '7', freezer_pin: nil, temperature_pin: '2', weight_pin: nil).run
 end
