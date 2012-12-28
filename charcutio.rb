@@ -43,10 +43,14 @@ class Charcutio
   end
 
   def run
-    regularly_update_set_points
-    humidistat.maintain_goal_state
-    thermostat.maintain_goal_state
-    sleep
+    if @id
+      regularly_update_set_points
+      humidistat.maintain_goal_state
+      thermostat.maintain_goal_state
+      sleep
+    else
+      puts "Can't run a fridge without an ID!"
+    end
   end
 
   private
@@ -54,8 +58,10 @@ class Charcutio
     def get_id
       return @id if @id
       temp_id = File.readlines('tmp/id').first if File.exist?('tmp/id')
-      return temp_id.to_i if temp_id.length > 0
-      client.get_id
+      return temp_id.to_i if temp_id && temp_id.length > 0
+      temp_id = client.get_id
+      File.open("tmp/id", 'w') { |f| f.puts temp_id }
+      temp_id
     end
 
     def get_set_points(data=nil)
