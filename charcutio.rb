@@ -40,7 +40,7 @@ class Charcutio
   end
 
   def post_sensor_data(sensor_name, sensor_data)
-    # client.post_sensor_data(sensor_name, sensor_data)
+    client.post_sensor_data(sensor_name, sensor_data)
   end
 
   def regularly_update_set_points
@@ -76,10 +76,12 @@ class Charcutio
       temp_id
     end
 
-    def get_set_points(data=nil)
+    def get_set_points
       humidistat.goal_state = 50
       thermostat.goal_state = 15
-      # humidistat.goal_state, thermostat.goal_state = client.get_set_points(data)
+      # set_points = client.get_set_points
+      # humidistat.goal_state = set_points['humidity']
+      # thermostat.goal_state = set_points['temperature']
     rescue => e
       LOGGER.error "#{Time.current} = #{e}"
     end

@@ -14,8 +14,8 @@ class FridgeApiClient
   end
 
   def get_set_points
-    RestClient.get ENV['API_URL'] #somethingsomething
-    [humidity_set_point, temperature_set_point]
+    response = RestClient.get "#{ENV['API_URL']}/boxes/#{@fridge.id}/set_points", api_key: ENV['API_KEY']
+    JSON.parse response
   end
 
   def post_sensor_data(sensor_name, sensor_data)
