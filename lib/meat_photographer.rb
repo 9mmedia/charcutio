@@ -33,7 +33,7 @@ class MeatPhotographer
     end
 
     def upload_meatshot(file_name)
-      # TODO implement
+      @api_client.post_meatshot(file_name)
     end
 
 end

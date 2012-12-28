@@ -21,4 +21,8 @@ class FridgeApiClient
   def post_sensor_data(sensor_name, sensor_data)
     RestClient.post "#{ENV['API_URL']}/boxes/#{@fridge.id}", api_key: ENV['API_KEY'], type: sensor_name, value: sensor_data
   end
+
+  def post_meatshot(file_path)
+    RestClient.post "#{ENV['API_URL']}/boxes/#{@fridge.id}/photo", image_file: File.new(file_path, 'rb')
+  end
 end
