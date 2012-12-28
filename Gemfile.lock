@@ -1,5 +1,6 @@
-PATH
-  remote: ~/code/dino
+GIT
+  remote: https://github.com/djbwise/dino.git
+  revision: 23a7b3df9814e5a4f760cb0a9184d4dda028e3b7
   specs:
     dino (0.9.1)
       serialport
