@@ -45,12 +45,12 @@ class Humidistat < BaseRegulator
   private
 
     def toggle_dehumidifier(state)
-      @dehumidifier_on = state == :on
       @dehumidifier.send state if @dehumidifier
+      @dehumidifier_on = state == :on
     end
 
     def toggle_humidifier(state)
-      @humidifier.send state
-      @humidifier_on = state == :on if @humidifier
+      @humidifier.send state if @humidifier
+      @humidifier_on = state == :on
     end
 end
