@@ -29,10 +29,10 @@ class Webcam
         width: 864,
         height: 480,
         quality: 75,
-        brightness: 80,
+        brightness: 100,
         contrast: 30,
         saturation: 60,
-        gain: 10,
+        gain: 100,
         output: "/home/pi/meatshots/meatshot_#{Time.now.strftime('%Y%m%d%H%M%S')}.jpg"
       }
     end
