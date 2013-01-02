@@ -23,7 +23,7 @@ class Thermostat < BaseRegulator
   end
 
   def update_relay_states
-    if latest_sensor_data >= goal_state + 10
+    if latest_sensor_data >= goal_state + 5
       puts "freezer should go on"
       @freezer.on unless @freezer_on || !@freezer
       @freezer_on = true
