@@ -89,5 +89,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(light_pins: '9, 10, 11', humidifier_pin: '5', dehumidifier_pin: nil, humidity_pin: '7', freezer_pin: nil, temperature_pin: '2', weight_pin: nil).run
+  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: nil).run
 end
