@@ -44,8 +44,8 @@ class Humidistat < BaseRegulator
       toggle_dehumidifier :off if @dehumidifier_on
       toggle_humidifier :off if @humidifier_on
     end
-    @charcutio.post_data_point 'humidifier', @humidifier_on
-    @charcutio.post_data_point 'dehumidifier', @dehumidifier_on
+    @fridge.post_data_point 'humidifier', @humidifier_on
+    @fridge.post_data_point 'dehumidifier', @dehumidifier_on
   end
 
   private

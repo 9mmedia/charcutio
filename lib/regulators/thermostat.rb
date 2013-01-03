@@ -36,6 +36,6 @@ class Thermostat < BaseRegulator
       @freezer.off if @freezer_on && @freezer
       @freezer_on = false
     end
-    @charcutio.post_data_point 'freezer', @freezer_on
+    @fridge.post_data_point 'freezer', @freezer_on
   end
 end
