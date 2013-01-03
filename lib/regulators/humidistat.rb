@@ -14,6 +14,10 @@ class Humidistat < BaseRegulator
     match[1].to_f if match
   end
 
+  def  sensor_name
+    'humidity'
+  end
+
   def set_relays
     @humidifier = Dino::Components::Led.new(pin: @pins[:humidifier_pin], board: @board) if @pins[:humidifier_pin]
     @dehumidifier = Dino::Components::Led.new(pin: @pins[:dehumidifier_pin], board: @board) if @pins[:dehumidifier_pin]

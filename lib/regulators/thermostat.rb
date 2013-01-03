@@ -13,6 +13,10 @@ class Thermostat < BaseRegulator
     File.readlines('tmp/temperature').first.to_f
   end
 
+  def sensor_name
+    'temperature'
+  end
+
   def set_relays
     @freezer = Dino::Components::Led.new(pin: @pins[:freezer_pin], board: @board) if @pins[:freezer_pin]
   end

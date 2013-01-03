@@ -9,9 +9,11 @@ class BaseRegulator
 
   def maintain_goal_state
     setup_sensor_callbacks
+    sleep 5
     Thread.new do
       loop do
         update_relay_states
+        @charcutio.post_sensor_data sensor_name, latest_sensor_data
         sleep 10 # should be 30
       end
     end
@@ -27,7 +29,6 @@ class BaseRegulator
       Proc.new do |data|
         puts "#{sensor_name}: #{data}"
         File.open("tmp/#{sensor_name}", 'w') { |f| f.puts data }
-        # @charcutio.post_sensor_data(sensor_name, sensor_data)
       end
     end
 
@@ -35,6 +36,5 @@ class BaseRegulator
       @sensors.each do |sensor_name, sensor|
         on_sensor_data(sensor_name, sensor)
       end
-      sleep 5
     end
 end
