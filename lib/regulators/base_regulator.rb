@@ -13,7 +13,7 @@ class BaseRegulator
     Thread.new do
       loop do
         update_relay_states
-        @charcutio.post_sensor_data sensor_name, latest_sensor_data
+        @charcutio.post_data_point sensor_name, latest_sensor_data
         sleep 10 # should be 30
       end
     end

@@ -39,8 +39,8 @@ class Charcutio
     @webcam ||= Webcam.new(light)
   end
 
-  def post_sensor_data(sensor_name, sensor_data)
-    client.post_sensor_data(sensor_name, sensor_data)
+  def post_data_point(data_type, value)
+    client.post_data_point(data_type, value)
   end
 
   def regularly_update_set_points

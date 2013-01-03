@@ -18,9 +18,9 @@ class FridgeApiClient
     JSON.parse response
   end
 
-  def post_sensor_data(sensor_name, sensor_data)
-    puts "trying to post sensor data (#{sensor_name}: #{sensor_data}"
-    RestClient.post "#{ENV['API_URL']}/boxes/#{@fridge.id}/report", api_key: ENV['API_KEY'], type: sensor_name, value: sensor_data
+  def post_data_point(data_type, value)
+    puts "posting data point (#{data_type}: #{value})"
+    RestClient.post "#{ENV['API_URL']}/boxes/#{@fridge.id}/report", api_key: ENV['API_KEY'], type: data_type, value: value
   end
 
   def post_meatshot(file_path)
