@@ -49,8 +49,9 @@ class Charcutio
 
   def regularly_update_set_points
     Thread.new do
+      register_weight_sensor
       loop do
-        post_data_point weight, latest_weight_data if @weight_sensor
+        post_data_point 'weight', latest_weight_data if @weight_sensor
         get_set_points
         puts "updating set points"
         sleep 30
@@ -60,7 +61,6 @@ class Charcutio
 
   def run
     if @id
-      register_weight_sensor
       regularly_update_set_points
       humidistat.maintain_goal_state
       thermostat.maintain_goal_state
