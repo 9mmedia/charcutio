@@ -86,8 +86,8 @@ class Charcutio
       humidistat.goal_state = 50
       thermostat.goal_state = 15
       # set_points = client.get_set_points
-      # humidistat.goal_state = set_points['humidity']
-      # thermostat.goal_state = set_points['temperature']
+      # humidistat.goal_state = set_points['humidity'].to_f
+      # thermostat.goal_state = set_points['temperature'].to_f
     rescue => e
       LOGGER.error "#{Time.current} = #{e}"
     end
@@ -102,5 +102,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: nil).run
+  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: 'A4').run
 end
