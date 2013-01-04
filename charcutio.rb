@@ -17,7 +17,6 @@ class Charcutio
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
     @weight_sensor = Dino::Components::Sensor.new(pin: @pins[:weight_pin], board: @board) if @pins[:weight_pin]
-    register_sensor 'weight', @weight_sensor if @weight_sensor
   end
 
   def client
@@ -51,7 +50,7 @@ class Charcutio
   def regularly_update_set_points
     Thread.new do
       loop do
-        post_data_point weight, latest_weight_data if @pins[:weight_pin]
+        post_data_point weight, latest_weight_data if @weight_sensor
         get_set_points
         puts "updating set points"
         sleep 30
@@ -61,6 +60,7 @@ class Charcutio
 
   def run
     if @id
+      register_weight_sensor
       regularly_update_set_points
       humidistat.maintain_goal_state
       thermostat.maintain_goal_state
@@ -94,6 +94,11 @@ class Charcutio
 
     def latest_weight_data
       File.readlines('tmp/weight').first.to_f
+    end
+
+    def register_weight_sensor
+      register_sensor 'weight', @weight_sensor if @weight_sensor
+      sleep 2
     end
 
     def sensor_callback(sensor_name)
