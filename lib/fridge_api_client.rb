@@ -19,7 +19,6 @@ class FridgeApiClient
   end
 
   def post_data_point(data_type, value)
-    puts "posting data point (#{data_type}: #{value})"
     RestClient.post "#{ENV['API_URL']}/boxes/#{@fridge.id}/report", api_key: ENV['API_KEY'], type: data_type, value: value
   end
 

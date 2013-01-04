@@ -53,7 +53,6 @@ class Charcutio
       loop do
         post_data_point 'weight', latest_weight_data if @weight_sensor
         get_set_points
-        puts "updating set points"
         sleep 30
       end
     end
@@ -103,7 +102,6 @@ class Charcutio
 
     def sensor_callback(sensor_name)
       Proc.new do |data|
-        puts "#{sensor_name}: #{data}"
         File.open("tmp/#{sensor_name}", 'w') { |f| f.puts data }
       end
     end
