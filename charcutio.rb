@@ -5,6 +5,7 @@ require File.expand_path('../lib/fridge_api_client', __FILE__)
 require File.expand_path('../lib/regulators', __FILE__)
 require File.expand_path('../lib/webcam', __FILE__)
 require File.expand_path('../lib/light', __FILE__)
+require File.expand_path('../lib/door', __FILE__)
 require File.expand_path('../lib/meat_photographer', __FILE__)
 
 class Charcutio
@@ -17,6 +18,7 @@ class Charcutio
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
     @weight_sensor = Dino::Components::Sensor.new(pin: @pins[:weight_pin], board: @board) if @pins[:weight_pin]
+    @door = Door.new(self)
   end
 
   def client
@@ -37,6 +39,10 @@ class Charcutio
 
   def webcam
     @webcam ||= Webcam.new(light)
+  end
+
+  def door
+    @door
   end
 
   def post_data_point(data_type, value)
@@ -109,5 +115,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: 'A4').run
+  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: 'A4', door_pin:'A3').run
 end
