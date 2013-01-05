@@ -2,15 +2,17 @@
 # activated. needs to be calibrarted based on how much force exists when door is open/closed
 class Door
   OPEN_THRESHOLD = 50
-  CLOSED_THRESHOLD = 200
+  CLOSED_THRESHOLD = 300
+
+  attr_reader :state
 
   def initialize(charcutio)
     @charcutio = charcutio
     @board = charcutio.board
     @pin = charcutio.pins[:door_pin]
-    @door_sensor = Dino::Components::Sensor.new(pin: pin, board: @board)
+    @door_sensor = Dino::Components::Sensor.new(pin: @pin, board: @board)
     @door_sensor.when_data_received(sensor_callback)
-    @state = :closed
+    @state = :undefined
   end
 
   def open?
@@ -34,11 +36,10 @@ class Door
 
     def sensor_callback
         Proc.new do |data|
-          #puts "door #{data}"
           if data.to_i < OPEN_THRESHOLD
-            state = :open
+            self.state = :open
           elsif data.to_i > CLOSED_THRESHOLD
-            state = :closed
+            self.state = :closed
           else
             #changing between states, or we get stuck here if calibration values are note right
           end

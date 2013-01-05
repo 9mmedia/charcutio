@@ -89,7 +89,7 @@ class Charcutio
 
     def get_set_points
       humidistat.goal_state = 50
-      thermostat.goal_state = 15
+      thermostat.goal_state = 13
       # set_points = client.get_set_points
       # humidistat.goal_state = set_points['humidity'].to_f
       # thermostat.goal_state = set_points['temperature'].to_f
@@ -115,5 +115,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: 'A4', door_pin:'A3').run
+  Charcutio.new(light_pins: '11,12,13', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: 'A4', door_pin:'A2').run
 end
