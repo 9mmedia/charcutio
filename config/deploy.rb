@@ -20,10 +20,10 @@ after "deploy" do
   run "sudo chmod a+x #{latest_release}/scripts/*.sh"
 
   # stop server
-  run "bundle exec #{latest_release}/scripts/stop.sh"
+  run "cd #{latest_release} && bundle exec #{latest_release}/scripts/stop.sh"
 
   # start server
-  run "bundle exec #{latest_release}/scripts/start.sh"
+  run "cd #{latest_release} && bundle exec #{latest_release}/scripts/start.sh"
 end
 
 # if you want to clean up old releases on each deploy uncomment this:
