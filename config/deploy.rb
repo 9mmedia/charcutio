@@ -17,11 +17,13 @@ set :default_environment, {
 role :app, "10.10.10.157"
 
 after "deploy" do
+  run "sudo chmod a+x #{latest_release}/scripts/*.sh"
+
   # stop server
-  run "#{latest_release}/scripts/stop.sh"
+  run "bundle exec #{latest_release}/scripts/stop.sh"
 
   # start server
-  run "#{latest_release}/scripts/start.sh"
+  run "bundle exec #{latest_release}/scripts/start.sh"
 end
 
 # if you want to clean up old releases on each deploy uncomment this:
