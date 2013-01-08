@@ -9,7 +9,8 @@ require File.expand_path('../lib/door', __FILE__)
 require File.expand_path('../lib/meat_photographer', __FILE__)
 
 class Charcutio
-  LOGGER = Logger.new('tmp/logfile.log')
+  DEPLOY_DIR = "/usr/local/charcutio" # TODO fix this
+  LOGGER = Logger.new("#{DEPLOY_DIR}/logfile.log")
 
   attr_accessor :board, :id, :pins
 
@@ -79,11 +80,12 @@ class Charcutio
   private
 
     def get_id
+      id_file = "#{DEPLOY_DIR}/id"
       return @id if @id
-      temp_id = File.readlines('tmp/id').first if File.exist?('tmp/id')
+      temp_id = File.readlines(id_file).first if File.exist?(id_file)
       return temp_id.to_i if temp_id && temp_id.length > 0
       temp_id = client.get_id
-      File.open("tmp/id", 'w') { |f| f.puts temp_id }
+      File.open(id_file, 'w') { |f| f.puts temp_id }
       temp_id
     end
 
