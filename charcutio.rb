@@ -1,12 +1,4 @@
-%w(logger rubygems bundler/setup dino rest_client).each do |lib|
-  require lib
-end
-require File.expand_path('../lib/fridge_api_client', __FILE__)
-require File.expand_path('../lib/regulators', __FILE__)
-require File.expand_path('../lib/webcam', __FILE__)
-require File.expand_path('../lib/light', __FILE__)
-require File.expand_path('../lib/door', __FILE__)
-require File.expand_path('../lib/meat_photographer', __FILE__)
+require File.expand_path('../lib/charcutio_requirements', __FILE__)
 
 class Charcutio
   DEPLOY_DIR = "/usr/local/charcutio" # TODO fix this
@@ -18,7 +10,6 @@ class Charcutio
     @id = get_id
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
-    @weight_sensor = Dino::Components::Sensor.new(pin: @pins[:weight_pin], board: @board) if @pins[:weight_pin]
     @door = Door.new(self)
   end
 
@@ -67,6 +58,7 @@ class Charcutio
 
   def run
     if @id
+      run_weight_sensor if pins[:weight_pin]
       regularly_update_set_points
       humidistat.maintain_goal_state
       thermostat.maintain_goal_state
@@ -99,13 +91,9 @@ class Charcutio
       LOGGER.error "#{Time.current} = #{e}"
     end
 
-    def latest_weight_data
-      File.readlines('tmp/weight').first.to_f
-    end
-
-    def register_weight_sensor
-      register_sensor 'weight', @weight_sensor if @weight_sensor
-      sleep 2
+    def run_weight_sensor
+      WeightSensor.supervise_as :weight_sensor, self, pins[:weight_pin]
+      Celluloid::Actor[:weight_sensor].run
     end
 
     def sensor_callback(sensor_name)
