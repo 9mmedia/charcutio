@@ -1,18 +1,4 @@
 class Humidistat < BaseRegulator
-  attr_reader :dehumidifier, :humidifier, :humidity_sensor
-
-  def goal_state=(value)
-    File.open('tmp/humidity_goal', 'w') { |f| f.puts value }
-  end
-
-  def goal_state
-    File.readlines('tmp/humidity_goal').first.to_f
-  end
-
-  def latest_sensor_data
-    match = File.readlines('tmp/humidity').first.match(/\|(.+)/)
-    match[1].to_f if match
-  end
 
   def  sensor_name
     'humidity'
@@ -24,25 +10,20 @@ class Humidistat < BaseRegulator
   end
 
   def set_sensors
-    @humidity_sensor = Dino::Components::DHT22.new(pin: @pins[:humidity_pin], board: @board)
-    @sensors = {humidity: @humidity_sensor}
+    humidity_sensor = Dino::Components::DHT22.new(pin: @pins[:humidity_pin], board: @board)
+    @sensors = {humidity: humidity_sensor}
   end
 
   def update_relay_states
-    current_data = latest_sensor_data
-    goal = goal_state
-    if current_data <= goal - 10
+    if @latest_sensor_data <= @goal_state - 10
       puts "humidifier should go on"
-      toggle_humidifier :on unless @humidifier_on
-      toggle_dehumidifier :off if @dehumidifier_on
-    elsif current_data >= goal + 10
+      humidify
+    elsif @latest_sensor_data >= @goal_state + 10
       puts "dehumidifier should go on"
-      toggle_humidifier :off if @humidifier_on
-      toggle_dehumidifier :on unless @dehumidifier_on
+      dehumidify
     else
       puts "humidifier and dehumidifier should go off"
-      toggle_dehumidifier :off if @dehumidifier_on
-      toggle_humidifier :off if @humidifier_on
+      turn_off_both_relays
     end
     @fridge.post_data_point 'humidifier', @humidifier_on
     @fridge.post_data_point 'dehumidifier', @dehumidifier_on
@@ -50,13 +31,21 @@ class Humidistat < BaseRegulator
 
   private
 
-    def toggle_dehumidifier(state)
-      @dehumidifier.send state if @dehumidifier
-      @dehumidifier_on = state == :on
+    def humidify
+      @humidifier.on unless @humidifier_on
+      @dehumidifier.off if @dehumidifier_on
+      @humidifier_on, @dehumidifier_on = true, false
     end
 
-    def toggle_humidifier(state)
-      @humidifier.send state if @humidifier
-      @humidifier_on = state == :on
+    def dehumidify
+      @humidifier.off if @humidifier_on
+      @dehumidifier.on unless @dehumidifier_on
+      @humidifier_on, @dehumidifier_on = false, true
+    end
+
+    def turn_off_both_relays
+      @humidifier.off unless @humidifier_on
+      @dehumidifier.off unless @dehumidifier_on
+      @humidifier_on, @dehumidifier_on = false, false
     end
 end

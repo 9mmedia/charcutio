@@ -1,5 +1,5 @@
-# door sensor is a force sensor, with values of 0 when not touched, and higher values when 
-# activated. needs to be calibrarted based on how much force exists when door is open/closed
+# door sensor is a force sensor, with values of 0 when not touched, and higher values when
+# activated. needs to be calibrated based on how much force exists when door is open/closed
 class Door
   OPEN_THRESHOLD = 50
   CLOSED_THRESHOLD = 300
