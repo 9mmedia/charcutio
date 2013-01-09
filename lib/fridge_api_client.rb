@@ -21,6 +21,8 @@ module FridgeApiClient
   end
 
   def self.fridge_id
-    @fridge_id ||= File.readlines("#{DEPLOY_DIR}/id").first if File.exist?("#{DEPLOY_DIR}/id")
+    return @fridge_id if @fridge_id
+    temp_id = File.readlines("#{DEPLOY_DIR}/id").first if File.exist?("#{DEPLOY_DIR}/id")
+    @fridge_id = temp_id.to_i if temp_id && temp_id.length > 0
   end
 end

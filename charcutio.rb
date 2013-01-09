@@ -4,7 +4,7 @@ class Charcutio
   DEPLOY_DIR = "/usr/local/charcutio" # TODO fix this
   LOGGER = Logger.new("#{DEPLOY_DIR}/logfile.log")
 
-  attr_accessor :board, :door, :id
+  attr_accessor :board, :door, :id, :pins
 
   def initialize(pins)
     @id = get_id
@@ -43,6 +43,7 @@ class Charcutio
     def get_id
       id_file = "#{DEPLOY_DIR}/id"
       File.open(id_file, 'w') { |f| f.puts "1" }
+      return 1
       # temp_id = File.readlines(id_file).first if File.exist?(id_file)
       # return temp_id.to_i if temp_id && temp_id.length > 0
       # temp_id = FridgeApiClient.get_id
