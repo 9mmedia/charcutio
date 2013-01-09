@@ -10,11 +10,13 @@ class MeatPhotographer
   def run
     # FIXME should have this stuff scheduled a better way
     sleep 5 # give the dino components time to init
-    loop do
-      post_meatshot new_meatshot
+    # take pics twice a day
+    every (60 * 60 * 12), post_new_meatshot
+  end
 
-      # take pics twice a day
-      sleep 60 * 60 * 12
+  def post_new_meatshot
+    Proc.new do
+      post_meatshot new_meatshot
     end
   end
 
