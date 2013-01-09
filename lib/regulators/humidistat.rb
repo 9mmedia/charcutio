@@ -25,8 +25,8 @@ class Humidistat < BaseRegulator
       puts "humidifier and dehumidifier should go off"
       turn_off_both_relays
     end
-    @fridge.post_data_point 'humidifier', @humidifier_on
-    @fridge.post_data_point 'dehumidifier', @dehumidifier_on
+    FridgeApiClient.post_data_point 'humidifier', @humidifier_on
+    FridgeApiClient.post_data_point 'dehumidifier', @dehumidifier_on
   end
 
   private

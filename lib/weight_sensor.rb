@@ -1,9 +1,8 @@
 class WeightSensor
   include Celluloid
 
-  def initialize(fridge, pin)
-    @fridge = fridge
-    @sensor = Dino::Components::Sensor.new(pin: pin, board: fridge.board)
+  def initialize(board, pins)
+    @sensor = Dino::Components::Sensor.new(pin: pins[:weight_pin], board: board)
   end
 
   def latest_sensor_data=(value)
@@ -14,7 +13,7 @@ class WeightSensor
     SensorRegistrar.register_sensor Actor.current, @sensor
     sleep 5
     loop do
-      @fridge.post_data_point 'weight', @latest_sensor_data if @latest_sensor_data
+      FridgeApiClient.post_data_point 'weight', @latest_sensor_data if @latest_sensor_data
       sleep 30
     end
   end

@@ -3,9 +3,8 @@
 class MeatPhotographer
   include Celluloid
 
-  def initialize(webcam, api_client)
+  def initialize(webcam)
     @webcam = webcam
-    @api_client = api_client
   end
 
   def run
@@ -26,7 +25,7 @@ class MeatPhotographer
     end
 
     def post_meatshot(file_name)
-      @api_client.post_meatshot file_name
+      FridgeApiClient.post_meatshot file_name
     end
 
 end

@@ -23,6 +23,6 @@ class Thermostat < BaseRegulator
       @freezer.off if @freezer_on
       @freezer_on = false
     end
-    @fridge.post_data_point 'freezer', @freezer_on
+    FridgeApiClient.post_data_point 'freezer', @freezer_on
   end
 end

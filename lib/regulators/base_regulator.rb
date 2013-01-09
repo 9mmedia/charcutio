@@ -1,10 +1,9 @@
 class BaseRegulator
   include Celluloid
 
-  def initialize(fridge)
-    @fridge = fridge
-    @board = fridge.board
-    @pins = fridge.pins
+  def initialize(board, pins)
+    @board = board
+    @pins = pins
     set_relays
     set_sensors
   end
@@ -20,8 +19,10 @@ class BaseRegulator
   def maintain_goal_state
     setup_sensor_callbacks
     loop do
-      update_relay_states
-      @fridge.post_data_point sensor_name, latest_sensor_data
+      if @goal_state && @latest_sensor_data
+        update_relay_states
+        FridgeApiClient.post_data_point sensor_name, @latest_sensor_data
+      end
       sleep 10 # should be 30
     end
   end
