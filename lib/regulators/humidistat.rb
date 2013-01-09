@@ -1,5 +1,9 @@
 class Humidistat < BaseRegulator
 
+  def latest_sensor_data=(value)
+    @latest_sensor_data = value.match(/\|(.+)/)[1].to_f
+  end
+
   def  sensor_name
     'humidity'
   end

@@ -6,7 +6,7 @@ class WeightSensor
   end
 
   def latest_sensor_data=(value)
-    @latest_sensor_data = value
+    @latest_sensor_data = value.to_f
   end
 
   def regularly_post_weight_data

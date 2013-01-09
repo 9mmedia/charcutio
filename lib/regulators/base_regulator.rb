@@ -13,7 +13,7 @@ class BaseRegulator
   end
 
   def latest_sensor_data=(value)
-    @latest_sensor_data = value
+    @latest_sensor_data = value.to_f
   end
 
   def maintain_goal_state
@@ -26,7 +26,7 @@ class BaseRegulator
   private
 
     def setup_sensor_callbacks
-      @sensors.each do |sensor|
+      @sensors.each do |sensor_name, sensor|
         SensorRegistrar.register_sensor Actor.current, sensor
       end
     end
