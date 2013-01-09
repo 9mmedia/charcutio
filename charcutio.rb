@@ -23,11 +23,12 @@ class Charcutio
 
   def run
     if @id
-      run_weight_sensor if pins[:weight_pin]
-      setpoint_updater.regularly_update_set_points
-      humidistat.maintain_goal_state
-      thermostat.maintain_goal_state
-      run_meat_photographer
+      setup_celluloid_actors
+      Celluloid::Actor[:setpoint_updater].regularly_update_set_points
+      Celluloid::Actor[:humidistat].maintain_goal_state
+      Celluloid::Actor[:thermostat].maintain_goal_state
+      Celluloid::Actor[:meat_photographer].take_regularly_scheduled_photos
+      Celluloid::Actor[:weight_sensor].regularly_post_weight_data if pins[:weight_pin]
       sleep
     else
       puts "Can't run a fridge without an ID!"
@@ -50,29 +51,12 @@ class Charcutio
       # File.open(id_file, 'w') { |f| f.puts temp_id }
     end
 
-    def humidistat
-      Humidistat.supervise_as :humidistat, @board, @pins
-      Celluloid::Actor[:humidistat]
-    end
-
-    def run_meat_photographer
-      MeatPhotographer.supervise_as :meat_photographer, webcam
-      Celluloid::Actor[:meat_photographer].run
-    end
-
-    def run_weight_sensor
-      WeightSensor.supervise_as :weight_sensor, @board, @pins
-      Celluloid::Actor[:weight_sensor].run
-    end
-
-    def setpoint_updater
+    def setup_celluloid_actors
       SetpointUpdater.supervise_as :setpoint_updater
-      Celluloid::Actor[:setpoint_updater]
-    end
-
-    def thermostat
+      MeatPhotographer.supervise_as :meat_photographer, webcam
+      Humidistat.supervise_as :humidistat, @board, @pins
       Thermostat.supervise_as :thermostat, @board, @pins
-      Celluloid::Actor[:thermostat]
+      WeightSensor.supervise_as :weight_sensor, @board, @pins if @pins[:weight_pin]
     end
 end
 

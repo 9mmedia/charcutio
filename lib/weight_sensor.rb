@@ -9,7 +9,7 @@ class WeightSensor
     @latest_sensor_data = value
   end
 
-  def run
+  def regularly_post_weight_data
     SensorRegistrar.register_sensor Actor.current, @sensor
     sleep 5
     every(30) { post_latest_sensor_data }
@@ -18,8 +18,6 @@ class WeightSensor
   private
 
     def post_latest_sensor_data
-      Proc.new do
-        FridgeApiClient.post_data_point 'weight', @latest_sensor_data if @latest_sensor_data
-      end
+      FridgeApiClient.post_data_point 'weight', @latest_sensor_data if @latest_sensor_data
     end
 end

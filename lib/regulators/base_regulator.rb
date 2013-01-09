@@ -32,11 +32,9 @@ class BaseRegulator
     end
 
     def update_relays_and_post_latest_sensor_data
-      Proc.new do
-        if @goal_state && @latest_sensor_data
-          update_relay_states
-          FridgeApiClient.post_data_point sensor_name, @latest_sensor_data
-        end
+      if @goal_state && @latest_sensor_data
+        update_relay_states
+        FridgeApiClient.post_data_point sensor_name, @latest_sensor_data
       end
     end
 end

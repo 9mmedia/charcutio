@@ -7,17 +7,11 @@ class MeatPhotographer
     @webcam = webcam
   end
 
-  def run
+  def take_regularly_scheduled_photos
     # FIXME should have this stuff scheduled a better way
     sleep 5 # give the dino components time to init
     # take pics twice a day
-    every(60 * 60 * 12) { post_new_meatshot }
-  end
-
-  def post_new_meatshot
-    Proc.new do
-      post_meatshot new_meatshot
-    end
+    every(60 * 60 * 12) { post_meatshot new_meatshot }
   end
 
   private
