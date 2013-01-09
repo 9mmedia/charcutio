@@ -42,7 +42,7 @@ class Charcutio
   def run
     if @id
       run_weight_sensor if pins[:weight_pin]
-      regularly_update_set_points
+      run_setpoint_updater
       humidistat.maintain_goal_state
       thermostat.maintain_goal_state
       run_meat_photographer
@@ -67,6 +67,11 @@ class Charcutio
     def run_meat_photographer
       MeatPhotographer.supervise_as :meat_photographer, webcam, client
       Celluloid::Actor[:meat_photographer].run
+    end
+
+    def run_setpoint_updater
+      SetpointUpdater.supervise_as :setpoint_updater, webcam, client
+      Celluloid::Actor[:setpoint_updater].regularly_update_set_points
     end
 
     def run_weight_sensor

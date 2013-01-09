@@ -1,5 +1,3 @@
-require File.expand_path('../../sensor_registrar', __FILE__)
-
 class BaseRegulator
   include Celluloid
 
