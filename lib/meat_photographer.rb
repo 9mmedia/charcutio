@@ -11,7 +11,7 @@ class MeatPhotographer
     # FIXME should have this stuff scheduled a better way
     sleep 5 # give the dino components time to init
     # take pics twice a day
-    every (60 * 60 * 12), post_new_meatshot
+    every(60 * 60 * 12) { post_new_meatshot }
   end
 
   def post_new_meatshot

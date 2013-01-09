@@ -2,7 +2,7 @@ class SetpointUpdater
   include Celluloid
 
   def regularly_update_set_points
-    every 10, update_set_points
+    every(10) { update_set_points }
     # should be 30 in production
   end
 

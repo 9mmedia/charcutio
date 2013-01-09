@@ -12,7 +12,7 @@ class WeightSensor
   def run
     SensorRegistrar.register_sensor Actor.current, @sensor
     sleep 5
-    every 30, post_latest_sensor_data
+    every(30) { post_latest_sensor_data }
   end
 
   private
