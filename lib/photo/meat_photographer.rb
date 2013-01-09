@@ -15,6 +15,10 @@ class MeatPhotographer
     every(60 * 60 * 12) { post_meatshot new_meatshot }
   end
 
+  def take_and_post_meatshot
+    post_meatshot new_meatshot
+  end
+
   private
 
     def new_meatshot

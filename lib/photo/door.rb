@@ -29,8 +29,10 @@ class Door
       if new_state != @state
         @charcutio.light.off if new_state == :closed
         @charcutio.light.on if new_state == :open
-        @state = new_state
+        @state = new_state      
         puts "Door is now #{@state}"
+
+        Celluloid::Actor[:meat_photographer].take_and_post_meatshot if @state == :open
       end
     end
 
