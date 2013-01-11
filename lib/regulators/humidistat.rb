@@ -19,10 +19,10 @@ class Humidistat < BaseRegulator
   end
 
   def update_relay_states
-    if @latest_sensor_data <= @goal_state - 10
+    if @latest_sensor_data <= @goal_state - 3
       puts "humidifier should go on"
       humidify
-    elsif @latest_sensor_data >= @goal_state + 10
+    elsif @latest_sensor_data >= @goal_state + 3
       puts "dehumidifier should go on"
       dehumidify
     else
