@@ -19,19 +19,20 @@ class Humidistat < BaseRegulator
   end
 
   def update_relay_states
-    if @in_maintenance_mode && @latest_sensor_data <= @goal_state - 5
-      puts "humidifier should go on"
-      humidify
-    elsif @latest_sensor_data <= @goal_state
+    if @latest_sensor_data <= @goal_state - 5
       puts "humidifier should go on"
       humidify
     elsif @latest_sensor_data >= @goal_state + 5
       puts "dehumidifier should go on"
       dehumidify
-    else
-      puts "humidifier and dehumidifier should go off"
-      @in_maintenance_mode ||= true
-      turn_off_both_relays
+    elsif @humidifier_on && @latest_sensor_data <= @goal_state - 3
+      puts "humidifier should go off"
+      @humidifier.off
+      @humidifier_on = false
+    elsif @dehumidifier_on && @latest_sensor_data <= goal_state - 3
+      puts "dehumidifier should go off"
+      @dehumidifier.off
+      @dehumidifier_on = false
     end
     FridgeApiClient.post_data_point 'humidifier', @humidifier_on
     FridgeApiClient.post_data_point 'dehumidifier', @dehumidifier_on
