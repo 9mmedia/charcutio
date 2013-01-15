@@ -29,7 +29,7 @@ class Humidistat < BaseRegulator
       puts "humidifier should go off"
       @humidifier.off
       @humidifier_on = false
-    elsif @dehumidifier_on && @latest_sensor_data <= goal_state - 3
+    elsif @dehumidifier_on && @latest_sensor_data <= @goal_state - 3
       puts "dehumidifier should go off"
       @dehumidifier.off
       @dehumidifier_on = false
