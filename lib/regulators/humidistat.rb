@@ -4,7 +4,7 @@ class Humidistat < BaseRegulator
     @latest_sensor_data = value.match(/\|(.+)/)[1].to_f
   end
 
-  def  sensor_name
+  def sensor_name
     'humidity'
   end
 
@@ -19,20 +19,21 @@ class Humidistat < BaseRegulator
   end
 
   def update_relay_states
-    if @latest_sensor_data <= @goal_state - 5
-      puts "humidifier should go on"
-      humidify
-    elsif @latest_sensor_data >= @goal_state + 5
-      puts "dehumidifier should go on"
-      dehumidify
-    elsif @humidifier_on && @latest_sensor_data >= @goal_state - 3
-      puts "humidifier should go off"
-      @humidifier.off
-      @humidifier_on = false
-    elsif @dehumidifier_on && @latest_sensor_data <= @goal_state - 3
-      puts "dehumidifier should go off"
-      @dehumidifier.off
-      @dehumidifier_on = false
+    @coasting_start_time = nil if coasting_period_over?
+    unless @coasting_start_time
+      if @latest_sensor_data <= @goal_state - 5
+        puts "humidifier should go on"
+        humidify
+      elsif @latest_sensor_data >= @goal_state + 5
+        puts "dehumidifier should go on"
+        dehumidify
+      elsif @humidifier_on && @latest_sensor_data >= @goal_state - 3
+        puts "humidifier should go off"
+        turn_off_both_relays
+      elsif @dehumidifier_on && @latest_sensor_data <= @goal_state - 3
+        puts "dehumidifier should go off"
+        turn_off_both_relays
+      end
     end
     FridgeApiClient.post_data_point 'humidifier', @humidifier_on
     FridgeApiClient.post_data_point 'dehumidifier', @dehumidifier_on
@@ -40,21 +41,36 @@ class Humidistat < BaseRegulator
 
   private
 
-    def humidify
-      @humidifier.on unless @humidifier_on
-      @dehumidifier.off if @dehumidifier_on
-      @humidifier_on, @dehumidifier_on = true, false
+    def any_relays_already_on?
+      @humidifier_on || @dehumidifier_on
+    end
+
+    def coasting_period_over?
+      @coasting_start_time && Time.now.to_i >= @coasting_start_time.to_i + 60 * 5
     end
 
     def dehumidify
+      unless @dehumidifier_on
+        @dehumidifier.on
+        @coasting_start_time = Time.now
+      end
       @humidifier.off if @humidifier_on
-      @dehumidifier.on unless @dehumidifier_on
       @humidifier_on, @dehumidifier_on = false, true
+    end
+
+    def humidify
+      unless @humidifier_on
+        @humidifier.on
+        @coasting_start_time = Time.now
+      end
+      @dehumidifier.off if @dehumidifier_on
+      @humidifier_on, @dehumidifier_on = true, false
     end
 
     def turn_off_both_relays
       @humidifier.off unless @humidifier_on
       @dehumidifier.off unless @dehumidifier_on
+      @coasting_start_time = Time.now if any_relays_already_on?
       @humidifier_on, @dehumidifier_on = false, false
     end
 end
