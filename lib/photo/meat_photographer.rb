@@ -14,7 +14,8 @@ class MeatPhotographer
     # take pics twice a day
     post_meatshot new_meatshot
     every(60 * 60 * 12) { post_meatshot new_meatshot }
-  rescue
+  rescue => e
+    Charcutio::LOGGER.error e.response
     sleep 0.05
     retry
   end

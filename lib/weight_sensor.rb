@@ -14,7 +14,8 @@ class WeightSensor
     SensorRegistrar.register_sensor Actor.current, @sensor
     sleep 5
     every(30) { post_latest_sensor_data }
-  rescue
+  rescue => e
+    Charcutio::LOGGER.error e.response
     sleep 0.05
     retry
   end

@@ -14,7 +14,8 @@ class SetpointUpdater
       # set_points = FridgeApiClient.get_set_points
       # Celluloid::Actor[:humidistat].goal_state = set_points['humidity'].to_f
       # Celluloid::Actor[:thermostat].goal_state = set_points['temperature'].to_f
-    rescue
+    rescue => e
+      Charcutio::LOGGER.error e.response
       sleep 0.05
       retry
     end
