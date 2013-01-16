@@ -23,7 +23,7 @@ class BaseRegulator
     every(10) { update_relays_and_post_latest_sensor_data }
     # should be 30 in production
   rescue => e
-    Charcutio::LOGGER.error "#{Time.current}: #{e}"
+    Charcutio::LOGGER.error "#{Time.now}: #{e}"
     sleep 0.05
     retry
   end

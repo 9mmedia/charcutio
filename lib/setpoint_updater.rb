@@ -15,7 +15,7 @@ class SetpointUpdater
       # Celluloid::Actor[:humidistat].goal_state = set_points['humidity'].to_f
       # Celluloid::Actor[:thermostat].goal_state = set_points['temperature'].to_f
     rescue => e
-      Charcutio::LOGGER.error "#{Time.current}: #{e}"
+      Charcutio::LOGGER.error "#{Time.now}: #{e}"
       sleep 0.05
       retry
     end

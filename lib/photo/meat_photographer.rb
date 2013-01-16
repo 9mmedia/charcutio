@@ -15,7 +15,7 @@ class MeatPhotographer
     take_and_post_meatshot
     every(60 * 60 * 12) { take_and_post_meatshot }
   rescue => e
-    Charcutio::LOGGER.error "#{Time.current}: #{e}"
+    Charcutio::LOGGER.error "#{Time.now}: #{e}"
     sleep 0.05
     retry
   end

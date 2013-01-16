@@ -15,7 +15,7 @@ class WeightSensor
     sleep 5
     every(30) { post_latest_sensor_data }
   rescue => e
-    Charcutio::LOGGER.error "#{Time.current}: #{e}"
+    Charcutio::LOGGER.error "#{Time.now}: #{e}"
     sleep 0.05
     retry
   end
