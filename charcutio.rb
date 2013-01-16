@@ -7,6 +7,7 @@ class Charcutio
   attr_accessor :board, :door, :id, :pins
 
   def initialize(pins)
+    LOGGER.info "Charcut.io starting up..."
     @id = get_id
     @board = Dino::Board.new Dino::TxRx.new
     @pins = pins
