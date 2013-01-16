@@ -8,16 +8,28 @@ module FridgeApiClient
   end
 
   def self.get_set_points
-    response = RestClient.get "#{ENV['API_URL']}/boxes/#{fridge_id}/set_points", api_key: ENV['API_KEY']
-    JSON.parse response
+    begin
+      response = RestClient.get "#{ENV['API_URL']}/boxes/#{fridge_id}/set_points", api_key: ENV['API_KEY']
+      JSON.parse response
+    rescue => e
+      puts e.response
+    end
   end
 
   def self.post_data_point(data_type, value)
-    RestClient.post "#{ENV['API_URL']}/boxes/#{fridge_id}/report", api_key: ENV['API_KEY'], type: data_type, value: value
+    begin
+      RestClient.post "#{ENV['API_URL']}/boxes/#{fridge_id}/report", api_key: ENV['API_KEY'], type: data_type, value: value
+    rescue => e
+      puts e.response
+    end
   end
 
   def self.post_meatshot(file_path)
-    RestClient.post "#{ENV['API_URL']}/boxes/#{fridge_id}/photo", api_key: ENV['API_KEY'], image_file: File.new(file_path, 'rb')
+    begin
+      RestClient.post "#{ENV['API_URL']}/boxes/#{fridge_id}/photo", api_key: ENV['API_KEY'], image_file: File.new(file_path, 'rb')
+    rescue => e
+      puts e.response
+    end
   end
 
   def self.fridge_id
