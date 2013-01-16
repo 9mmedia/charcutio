@@ -3,6 +3,7 @@ class WeightSensor
 
   def initialize(board, pins)
     @sensor = Dino::Components::Sensor.new(pin: pins[:weight_pin], board: board)
+    regularly_post_weight_data
   end
 
   def latest_sensor_data=(value)

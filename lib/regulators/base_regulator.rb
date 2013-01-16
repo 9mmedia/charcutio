@@ -6,6 +6,7 @@ class BaseRegulator
     @pins = pins
     set_relays
     set_sensors
+    maintain_goal_state
   end
 
   def goal_state=(value)

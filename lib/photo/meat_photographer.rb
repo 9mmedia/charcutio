@@ -5,6 +5,7 @@ class MeatPhotographer
 
   def initialize(webcam)
     @webcam = webcam
+    take_regularly_scheduled_photos
   end
 
   def take_regularly_scheduled_photos
