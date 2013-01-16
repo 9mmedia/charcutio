@@ -2,7 +2,7 @@ require File.expand_path('../lib/charcutio_requirements', __FILE__)
 
 class Charcutio
   DEPLOY_DIR = "/usr/local/charcutio" # TODO fix this
-  LOGGER = Logger.new("#{DEPLOY_DIR}/logfile.log")
+  LOGGER = Logger.new("#{DEPLOY_DIR}/charcutio.log")
 
   attr_accessor :board, :door, :id, :pins
 
