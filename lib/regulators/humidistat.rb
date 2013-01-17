@@ -56,8 +56,9 @@ class Humidistat < BaseRegulator
     end
 
     def turn_off_both_relays
-      @humidifier.off if @humidifier_on
+      @humidifier.off if @humidifier_on      
       @dehumidifier.off if @dehumidifier_on
+      @coasting_start_time = Time.now if @humidifier_on || @dehumidifier_on
       @humidifier_on, @dehumidifier_on = false, false
     end
 end
