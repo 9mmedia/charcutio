@@ -20,10 +20,10 @@ class Humidistat < BaseRegulator
 
   def update_relay_states
     @coasting_start_time = nil if coasting_period_over?
-    if @latest_sensor_data <= @goal_state - 5 && !@coasting_start_time && !@dehumidifier_on
+    if @latest_sensor_data <= @goal_state - 5 && !coasting_needed?
       puts "humidifier should go on"
       humidify
-    elsif @latest_sensor_data >= @goal_state + 5 && !@coasting_start_time && !@humidifier_on
+    elsif @latest_sensor_data >= @goal_state + 5 && !coasting_needed?
       puts "dehumidifier should go on"
       dehumidify
     elsif @humidifier_on && @latest_sensor_data >= @goal_state - 3
@@ -38,6 +38,10 @@ class Humidistat < BaseRegulator
   end
 
   private
+
+    def coasting_needed?
+      @coasting_start_time || @dehumidifier_on || @humidifier_on
+    end
 
     def coasting_period_over?
       @coasting_start_time && Time.now.to_i >= @coasting_start_time.to_i + 60 * 5
