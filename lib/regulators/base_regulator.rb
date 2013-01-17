@@ -40,6 +40,7 @@ class BaseRegulator
       if @goal_state && @latest_sensor_data
         update_relay_states
         FridgeApiClient.post_data_point sensor_name, @latest_sensor_data
+        @latest_sensor_data = nil
       end
     end
 end
