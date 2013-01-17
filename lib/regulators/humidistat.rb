@@ -20,17 +20,17 @@ class Humidistat < BaseRegulator
 
   def update_relay_states
     @coasting_start_time = nil if coasting_period_over?
-    if @coasting_start_time
-      puts "humidistat still coasting with both relays off"
-    elsif @latest_sensor_data <= @goal_state - 5
+    if @latest_sensor_data <= @goal_state - 5 && !@coasting_start_time
       puts "humidifier should go on"
       humidify
-    elsif @latest_sensor_data >= @goal_state + 5
+    elsif @latest_sensor_data >= @goal_state + 5 && !@coasting_start_time
       puts "dehumidifier should go on"
       dehumidify
-    else
-      puts "humidifier and dehumidifier should both go off"
-      @coasting_start_time = Time.now if @humidifier_on || @dehumidifier_on
+    elsif @humidifier_on && @latest_sensor_data >= @goal_state - 3
+      puts "humidifier should go off"
+      turn_off_both_relays
+    elsif @dehumidifier_on && @latest_sensor_data <= @goal_state - 3
+      puts "dehumidifier should go off"
       turn_off_both_relays
     end
     FridgeApiClient.post_data_point 'humidifier', @humidifier_on
