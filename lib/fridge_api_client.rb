@@ -12,7 +12,7 @@ module FridgeApiClient
       response = RestClient.get "#{ENV['API_URL']}/boxes/#{fridge_id}/set_points", api_key: ENV['API_KEY']
       JSON.parse response
     rescue => e
-      Charcutio::LOGGER.error e.try(:response)
+      Charcutio::LOGGER.error e.message
     end
   end
 
@@ -20,7 +20,7 @@ module FridgeApiClient
     begin
       RestClient.post "#{ENV['API_URL']}/boxes/#{fridge_id}/report", api_key: ENV['API_KEY'], type: data_type, value: value
     rescue => e
-      Charcutio::LOGGER.error e.try(:response)
+      Charcutio::LOGGER.error e.message
     end
   end
 
@@ -28,7 +28,7 @@ module FridgeApiClient
     begin
       RestClient.post "#{ENV['API_URL']}/boxes/#{fridge_id}/photo", api_key: ENV['API_KEY'], image_file: File.new(file_path, 'rb')
     rescue => e
-      Charcutio::LOGGER.error e.try(:response)
+      Charcutio::LOGGER.error e.message
     end
   end
 
