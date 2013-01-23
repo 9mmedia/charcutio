@@ -5,8 +5,7 @@ class BaseRegulator
     @board = board
     @pins = pins
     set_relays
-    set_sensors
-    maintain_goal_state
+    every(10) { update_relays_and_post_latest_sensor_data }
   end
 
   def goal_state=(value)
@@ -17,20 +16,7 @@ class BaseRegulator
     @latest_sensor_data = value.to_f
   end
 
-  def maintain_goal_state
-    setup_sensor_callbacks
-    sleep 5
-    every(10) { update_relays_and_post_latest_sensor_data }
-    # should be 30 in production
-  end
-
   private
-
-    def setup_sensor_callbacks
-      @sensors.each do |sensor_name, sensor|
-        SensorRegistrar.register_sensor Actor.current, sensor
-      end
-    end
 
     def update_relays_and_post_latest_sensor_data
       if @goal_state && @latest_sensor_data

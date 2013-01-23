@@ -17,7 +17,7 @@ class MeatPhotographer
   end
 
   def take_and_post_meatshot
-    post_meatshot new_meatshot
+    post_meatshot new_meatshot rescue nil
   end
 
   private

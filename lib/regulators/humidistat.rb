@@ -13,11 +13,6 @@ class Humidistat < BaseRegulator
     @dehumidifier = Dino::Components::Led.new(pin: @pins[:dehumidifier_pin], board: @board) if @pins[:dehumidifier_pin]
   end
 
-  def set_sensors
-    humidity_sensor = Dino::Components::DHT22.new(pin: @pins[:humidity_pin], board: @board)
-    @sensors = {humidity: humidity_sensor}
-  end
-
   def update_relay_states
     @coasting_start_time = nil if coasting_period_over?
     if @latest_sensor_data <= @goal_state - 5 && !coasting_needed?

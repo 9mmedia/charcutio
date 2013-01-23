@@ -24,15 +24,20 @@ class Charcutio
 
   def run
     if @id
+      register_remaining_sensors
       SetpointUpdater.supervise_as :setpoint_updater
       MeatPhotographer.supervise_as :meat_photographer, webcam
       Humidistat.supervise_as :humidistat, @board, @pins
       Thermostat.supervise_as :thermostat, @board, @pins
-      WeightSensor.supervise_as :weight_sensor, @board, @pins if @pins[:weight_pin]
+      WeightSensor.supervise_as :weight_sensor
       sleep
     else
       puts "Can't run a fridge without an ID!"
     end
+  end
+
+  def sensors
+    @sensors ||= {}
   end
 
   def webcam
@@ -50,6 +55,25 @@ class Charcutio
       # temp_id = FridgeApiClient.get_id
       # File.open(id_file, 'w') { |f| f.puts temp_id }
     end
+
+    def register_remaining_sensors
+      sensors[:humidity] = {actor_key: :humidistat, sensor: Dino::Components::DHT22.new(pin: @pins[:humidity_pin], board: @board)}
+      sensors[:temperature] = {actor_key: :thermostat, sensor: Dino::Components::OneWire.new(pin: @pins[:temperature_pin], board: @board)}
+      sensors[:weight] = {actor_key: :weight_sensor, sensor: Dino::Components::Sensor.new(pin: pins[:weight_pin], board: board)} if @pins[:weight_pin]
+      sensors.each { |key, sensor| sensor[:sensor].when_data_received sensor_callback(sensor) }
+    end
+
+    def sensor_callback(sensor)
+      Proc.new do |data|
+        actor = sensor_current_actor(sensor[:actor_key])
+        actor.latest_sensor_data = data if actor
+      end
+    end
+
+    def sensor_current_actor(key)
+      Celluloid::Actor[key]
+    end
+
 end
 
 
