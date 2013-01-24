@@ -15,7 +15,7 @@ class Thermostat < BaseRegulator
         @freezer.on
         @freezer_on = true
       end
-    elsif @latest_sensor_data < @goal_state - 0.5
+    elsif @latest_sensor_data < @goal_state
       if @freezer_on
         puts "freezer should go off"
         @freezer.off
