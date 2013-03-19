@@ -29,7 +29,7 @@ class Charcutio
       MeatPhotographer.supervise_as :meat_photographer, webcam
       Humidistat.supervise_as :humidistat, @board, @pins
       Thermostat.supervise_as :thermostat, @board, @pins
-      WeightSensor.supervise_as :weight_sensor
+      
       sleep
     else
       puts "Can't run a fridge without an ID!"
@@ -59,7 +59,14 @@ class Charcutio
     def register_remaining_sensors
       sensors[:humidity] = {actor_key: :humidistat, sensor: Dino::Components::DHT22.new(pin: @pins[:humidity_pin], board: @board)}
       sensors[:temperature] = {actor_key: :thermostat, sensor: Dino::Components::OneWire.new(pin: @pins[:temperature_pin], board: @board)}
-      sensors[:weight] = {actor_key: :weight_sensor, sensor: Dino::Components::Sensor.new(pin: pins[:weight_pin], board: board)} if @pins[:weight_pin]
+
+      pins[:weight_pins].to_a.each_with_index do |weight_pin, pin_num|
+        sensor_key = "weight_#{pin_num}".to_sym
+        sensors[sensor_key] = {actor_key: sensor_key, sensor: Dino::Components::Sensor.new(pin: weight_pin, board: @board)}
+        WeightSensor.supervise_as sensor_key
+        Celluloid::Actor[sensor_key].key = sensor_key.to_s
+      end
+      
       sensors.each { |key, sensor| sensor[:sensor].when_data_received sensor_callback(sensor) }
     end
 
@@ -78,5 +85,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(light_pins: '9,10,11', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pin: 'A4', door_pin:'A2').run
+  Charcutio.new(light_pins: '9,10,11', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pins: ['A5','A4','A3'], door_pin:'A2').run
 end
