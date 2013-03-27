@@ -1,13 +1,7 @@
 class Humidistat < BaseRegulator
 
   def latest_sensor_data=(value)
-    #check and log error
-    # if (value[0] == "E")
-    #   Charcutio::LOGGER.error "Humidistat error: #{value[1..-1]}"
-    # else
-    #   @latest_sensor_data = value.match(/\|(.+)/)[1].to_f
-    # end
-    @latest_sensor_data = value.to_f
+    @latest_sensor_data = ((value.to_f/1024.0)*5.0 - 0.826)/0.0315
   end
 
   def sensor_name
