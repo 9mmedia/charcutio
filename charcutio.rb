@@ -57,7 +57,7 @@ class Charcutio
     end
 
     def register_remaining_sensors
-      sensors[:humidity] = {actor_key: :humidistat, sensor: Dino::Components::DHT22.new(pin: @pins[:humidity_pin], board: @board)}
+      sensors[:humidity] = {actor_key: :humidistat, sensor: Dino::Components::Sensor.new(pin: @pins[:humidity_pin], board: @board)}
       sensors[:temperature] = {actor_key: :thermostat, sensor: Dino::Components::OneWire.new(pin: @pins[:temperature_pin], board: @board)}
 
       pins[:weight_pins].to_a.each_with_index do |weight_pin, pin_num|
@@ -85,5 +85,5 @@ end
 
 
 if __FILE__ == $0
-  Charcutio.new(light_pins: '9,10,11', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: '8', freezer_pin: '2', temperature_pin: '7', weight_pins: ['A5','A4','A3'], door_pin:'A2').run
+  Charcutio.new(light_pins: '9,10,11', humidifier_pin: '3', dehumidifier_pin: '4', humidity_pin: 'A0', freezer_pin: '2', temperature_pin: '7', weight_pins: ['A5','A4','A3'], door_pin:'A2').run
 end
