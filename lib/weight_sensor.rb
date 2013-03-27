@@ -20,7 +20,7 @@ class WeightSensor
     def post_latest_sensor_data
       data = @data.sort
       avg = data.reduce(:+).to_f / data.size
-      Charcutio::LOGGER.info "#{@key} - AVG:#{avg} SIZE:#{data.size}"
+      #Charcutio::LOGGER.info "#{@key} - AVG:#{avg} SIZE:#{data.size}"
       FridgeApiClient.post_data_point key, avg if @latest_sensor_data
     end
 end
