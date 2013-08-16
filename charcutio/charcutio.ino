@@ -22,7 +22,7 @@ void loop(void) {
 }
 
 void updateFreezerState(float current_temperature){
-  if (current_temperature > goal_temperature) {
+  if (current_temperature >= goal_temperature + 0.5) {
     digitalWrite(freezer, HIGH);
   } else if (current_temperature < goal_temperature) {
     digitalWrite(freezer, LOW);
